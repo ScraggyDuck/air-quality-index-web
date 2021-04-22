@@ -68,7 +68,7 @@ const Stations = () => {
               itemsPerPage={6}
               activePage={page}
               clickableRows
-              onRowClick={(item) => history.push(`/users/${item.id}`)}
+              onRowClick={(item) => history.push(`/stations/${item.id}`)}
               scopedSlots={{
                 aqi: (item) => (
                   <td>

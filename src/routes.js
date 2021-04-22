@@ -58,8 +58,9 @@ const Typography = React.lazy(() =>
 );
 const Widgets = React.lazy(() => import("./views/widgets/Widgets"));
 const Users = React.lazy(() => import("./views/users/Users"));
-const Stations = React.lazy(() => import("./views/stations/Stations"));
 const User = React.lazy(() => import("./views/users/User"));
+const Stations = React.lazy(() => import("./views/stations/Stations"));
+const Station = React.lazy(() => import("./views/stations/Station"));
 
 const routes = [
   { path: "/", exact: true, name: "Home" },
@@ -120,6 +121,12 @@ const routes = [
   { path: "/users", exact: true, name: "Users", component: Users },
   { path: "/users/:id", exact: true, name: "User Details", component: User },
   { path: "/stations", exact: true, name: "Stations", component: Stations },
+  {
+    path: "/stations/:id",
+    exact: true,
+    name: "Station Details",
+    component: Station,
+  },
 ];
 
 export default routes;
