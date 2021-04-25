@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CBadge,
   CCard,
@@ -10,26 +10,46 @@ import {
 import CIcon from "@coreui/icons-react";
 
 import stationsData from "./StationsData";
+import { StationService } from "src/services";
 
 const getBadge = (status) => {
   switch (status) {
-    case "Active":
+    case true:
       return "success";
-    case "Inactive":
+    case false:
       return "secondary";
   }
 };
 
 const Station = ({ match }) => {
-  const station = stationsData.find(
-    (station) => station.id.toString() === match.params.id
-  );
+  const [station, setStation] = useState({});
+
+  const fetchStationById = async () => {
+    try {
+      const data = await StationService.getStationById(match.params.id);
+      if (data) {
+        setStation(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStationById();
+  }, []);
 
   return (
     <CRow>
       <CCol lg={12}>
         <CCard>
-          <CCardHeader>Station id: {match.params.id}</CCardHeader>
+          <CCardHeader>
+            <b>Station id:</b> {match.params.id} <br /> <b>Station name:</b>
+            {station?.NameDevice}
+            <br /> <b>Area:</b>
+            {station?.area}
+          </CCardHeader>
+
           <CCardBody>
             {!station ? (
               <span>
@@ -39,37 +59,32 @@ const Station = ({ match }) => {
               <table bordered className="table table-striped table-hover">
                 <tbody>
                   <tr>
-                    <th>Name</th>
-                    <td>{station.name}</td>
-                  </tr>
-                  <tr>
-                    <th>CO (ppm)</th>
-                    <td>{station.co}</td>
-                  </tr>
-                  <tr>
-                    <th>BAT (%)</th>
-                    <td>{station.bat}</td>
-                  </tr>
-                  <tr>
+                    <th>O2 (ppm)</th>
+                    <th>PRES (pa)</th>
+                    <th>TEM (%)</th>
                     <th>HUM (%)</th>
-                    <td>{station.hum}</td>
-                  </tr>
-                  <tr>
-                    <th>TC (Pa)</th>
-                    <td>{station.tc}</td>
-                  </tr>
-                  <tr>
-                    <th>NO2 (ppm)</th>
-                    <td>{station.no2}</td>
-                  </tr>
-                  <tr>
+                    <th>PM2.5</th>
                     <th>Status</th>
-                    <td>
-                      <CBadge color={getBadge(station.status)}>
-                        {station.status}
-                      </CBadge>
-                    </td>
+                    <th>Time</th>
                   </tr>
+
+                  {station &&
+                    station.data &&
+                    station.data.map((item) => (
+                      <tr>
+                        <td>{item?.O2}</td>
+                        <td>{item?.Pre}</td>
+                        <td>{item?.Tem}</td>
+                        <td>{item?.Hum}</td>
+                        <td>{item?.PM25}</td>
+                        <td>
+                          <CBadge color={getBadge(station.status)}>
+                            {station.status ? "Active" : "Inactive"}
+                          </CBadge>
+                        </td>
+                        <td> {new Date(item?.createdAt).toLocaleString()}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             )}

@@ -8,8 +8,14 @@ import {
   CImg,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { useHistory } from "react-router";
 
 const TheHeaderDropdown = () => {
+  const history = useHistory();
+  const logout = () => {
+    localStorage.removeItem("token");
+    history.push(`/login`);
+  };
   return (
     <CDropdown inNav className="c-header-nav-items mx-2" direction="down">
       <CDropdownToggle className="c-header-nav-link" caret={false}>
@@ -72,7 +78,7 @@ const TheHeaderDropdown = () => {
           <CBadge color="primary" className="mfs-auto">42</CBadge>
         </CDropdownItem> */}
         <CDropdownItem divider className="m-0" />
-        <CDropdownItem>
+        <CDropdownItem onClick={logout}>
           <CIcon name="cil-lock-locked " className="mfe-2" />
           Log out
         </CDropdownItem>

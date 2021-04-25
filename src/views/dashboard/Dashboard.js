@@ -16,7 +16,6 @@ const WidgetsDropdown = lazy(() => import("../widgets/WidgetsDropdown.js"));
 const WidgetsBrand = lazy(() => import("../widgets/WidgetsBrand.js"));
 
 const Dashboard = () => {
-  const history = useHistory();
   return (
     <>
       <WidgetsDropdown />
@@ -104,7 +103,7 @@ const Dashboard = () => {
         </CCardFooter>
       </CCard> */}
 
-      {/* <WidgetsBrand withCharts /> */}
+      <WidgetsBrand withCharts />
 
       <CRow>
         <CCol>
@@ -647,7 +646,6 @@ const Dashboard = () => {
               </table> */}
           {/* </CCardBody>
           </CCard> */}
-          <Stations />
         </CCol>
       </CRow>
     </>

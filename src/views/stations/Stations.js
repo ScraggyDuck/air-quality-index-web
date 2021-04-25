@@ -10,30 +10,28 @@ import {
   CRow,
   CPagination,
 } from "@coreui/react";
-
-import stationsData from "./StationsData";
+import { StationService } from "src/services";
 
 const getBadge = (status) => {
-  switch (status) {
-    case "Active":
-      return "success";
-    case "Inactive":
-      return "secondary";
+  if (status) {
+    return "success";
   }
+  return "secondary";
 };
 
-const getAQIBadge = (aqi) => {
-  if (aqi >= 0 && aqi < 100) {
-    return "success";
-  } else if (aqi >= 100 && aqi < 150) {
-    return "warning";
-  }
-  if (aqi >= 150) {
-    return "danger";
-  }
-};
+// const getAQIBadge = (aqi) => {
+//   if (aqi >= 0 && aqi < 100) {
+//     return "success";
+//   } else if (aqi >= 100 && aqi < 150) {
+//     return "warning";
+//   }
+//   if (aqi >= 150) {
+//     return "danger";
+//   }
+// };
 
 const Stations = () => {
+  const [stationsData, setStationsData] = useState([]);
   const history = useHistory();
   const queryPage = useLocation().search.match(/page=([0-9]+)/, "");
   const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1);
@@ -43,9 +41,24 @@ const Stations = () => {
     currentPage !== newPage && history.push(`/stations?page=${newPage}`);
   };
 
+  const fetchStationsData = async () => {
+    try {
+      const data = await StationService.getAllStations();
+      if (data) {
+        setStationsData(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     currentPage !== page && setPage(currentPage);
   }, [currentPage, page]);
+
+  useEffect(() => {
+    fetchStationsData();
+  }, []);
 
   return (
     <CRow>
@@ -58,8 +71,11 @@ const Stations = () => {
             <CDataTable
               items={stationsData}
               fields={[
-                { key: "name", _classes: "font-weight-bold" },
-                "aqi",
+                {
+                  key: "NameDevice",
+                  label: "Station Name",
+                  _classes: "font-weight-bold",
+                },
                 "area",
                 "status",
               ]}
@@ -68,18 +84,13 @@ const Stations = () => {
               itemsPerPage={6}
               activePage={page}
               clickableRows
-              onRowClick={(item) => history.push(`/stations/${item.id}`)}
+              onRowClick={(item) => history.push(`/stations/${item._id}`)}
               scopedSlots={{
-                aqi: (item) => (
-                  <td>
-                    <CBadge color={getAQIBadge(item.aqi)}>
-                      <div style={{ width: 23, color: "#fff" }}>{item.aqi}</div>
-                    </CBadge>
-                  </td>
-                ),
                 status: (item) => (
                   <td>
-                    <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
+                    <CBadge color={getBadge(item.status)}>
+                      {item.status ? "Active" : "Inactive"}
+                    </CBadge>
                   </td>
                 ),
               }}

@@ -61,6 +61,7 @@ const Users = React.lazy(() => import("./views/users/Users"));
 const User = React.lazy(() => import("./views/users/User"));
 const Stations = React.lazy(() => import("./views/stations/Stations"));
 const Station = React.lazy(() => import("./views/stations/Station"));
+const Page404 = React.lazy(() => import("./views/pages/page404/Page404"));
 
 const routes = [
   { path: "/", exact: true, name: "Home" },
