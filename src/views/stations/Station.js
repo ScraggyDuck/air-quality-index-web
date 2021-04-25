@@ -48,6 +48,11 @@ const Station = ({ match }) => {
             {station?.NameDevice}
             <br /> <b>Area:</b>
             {station?.area}
+            <br />
+            <b>Status: </b>
+            <CBadge color={getBadge(station.status)}>
+              {station.status ? "Active" : "Inactive"}
+            </CBadge>
           </CCardHeader>
 
           <CCardBody>
@@ -56,7 +61,10 @@ const Station = ({ match }) => {
                 <CIcon className="text-muted" name="cui-icon-ban" /> Not found
               </span>
             ) : (
-              <table bordered className="table table-striped table-hover">
+              <table
+                bordered={true}
+                className="table table-striped table-hover"
+              >
                 <tbody>
                   <tr>
                     <th>O2 (ppm)</th>
@@ -70,18 +78,14 @@ const Station = ({ match }) => {
 
                   {station &&
                     station.data &&
-                    station.data.map((item) => (
-                      <tr>
+                    station.data.map((item, index) => (
+                      <tr key={index}>
                         <td>{item?.O2}</td>
                         <td>{item?.Pre}</td>
                         <td>{item?.Tem}</td>
                         <td>{item?.Hum}</td>
                         <td>{item?.PM25}</td>
-                        <td>
-                          <CBadge color={getBadge(station.status)}>
-                            {station.status ? "Active" : "Inactive"}
-                          </CBadge>
-                        </td>
+
                         <td> {new Date(item?.createdAt).toLocaleString()}</td>
                       </tr>
                     ))}
